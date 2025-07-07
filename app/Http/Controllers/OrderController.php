@@ -152,7 +152,8 @@ class OrderController extends Controller
 
 
 
-    public function update(Request $request, $id)
+
+    public function update(Request $request, $id, WhatsAppService $whatsapp)
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -170,15 +171,14 @@ class OrderController extends Controller
 
             $oldQty = $order->qty;
             $oldStockId = $order->stock_id;
+            $oldStatus = $order->status; // Save old status to check changes later
 
-            // If stock changed, revert old stock qty and reduce new stock qty
+            // Stock quantity adjustments (same as before)
             if ($validated['stock_id'] != $oldStockId) {
-                // Restore old stock qty
                 $oldStock = Stock::findOrFail($oldStockId);
                 $oldStock->receive_qty += $oldQty;
                 $oldStock->save();
 
-                // Reduce new stock qty
                 $newStock = Stock::findOrFail($validated['stock_id']);
                 if ($newStock->receive_qty < $validated['qty']) {
                     return back()->withErrors(['qty' => 'Ordered quantity exceeds available stock.'])->withInput();
@@ -186,18 +186,16 @@ class OrderController extends Controller
                 $newStock->receive_qty -= $validated['qty'];
                 $newStock->save();
             } else {
-                // Same stock, adjust qty difference
                 $stock = Stock::findOrFail($oldStockId);
                 $qtyDiff = $validated['qty'] - $oldQty;
-
                 if ($qtyDiff > 0 && $stock->receive_qty < $qtyDiff) {
                     return back()->withErrors(['qty' => 'Ordered quantity exceeds available stock.'])->withInput();
                 }
-
                 $stock->receive_qty -= $qtyDiff;
                 $stock->save();
             }
 
+            // Update the order
             $order->update([
                 'customer_id' => $validated['customer_id'],
                 'stock_id' => $validated['stock_id'],
@@ -213,8 +211,7 @@ class OrderController extends Controller
 
             $paymentStatus = match ($order->order_type) {
                 'Card Payment', 'Cash' => 'Paid',
-                'Cash on Delivery' => 
-                    in_array($order->status, ['Delivered', 'Collected']) ? 'Paid' : 'Pending',
+                'Cash on Delivery' => in_array($order->status, ['Delivered', 'Collected']) ? 'Paid' : 'Pending',
             };
 
             if ($order->payment) {
@@ -228,6 +225,17 @@ class OrderController extends Controller
                     'amount' => $amount,
                     'status' => $paymentStatus,
                 ]);
+            }
+
+            // Send WhatsApp message ONLY if status changed
+            if ($oldStatus !== $order->status) {
+                $customer = Customer::findOrFail($validated['customer_id']);
+                $rawPhone = $customer->contact_number;
+                $phone = '+94' . ltrim($rawPhone, '0');
+
+                $message = "Hi {$customer->cust_fname} {$customer->cust_lname}, your order #{$order->order_ref} status has been updated to: {$order->status}. Total: Rs. {$amount}. Thank you!";
+
+                $whatsapp->sendMessage($phone, $message);
             }
 
             \DB::commit();
