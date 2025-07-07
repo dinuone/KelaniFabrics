@@ -20,16 +20,7 @@ class Order extends Model
 
 
 
-    public static function generateOrderRef()
-    {
-       $latest = DB::table('orders')->select('order_ref')->orderByDesc('id')->first();
-
-        $number = $latest
-            ? ((int) filter_var($latest->order_ref, FILTER_SANITIZE_NUMBER_INT)) + 1
-            : 1;
-
-        return 'ORD-' . str_pad($number, 5, '0', STR_PAD_LEFT);
-    }
+   
 
     public function payment()
     {

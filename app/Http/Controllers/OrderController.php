@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use App\Exports\OrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use App\Services\WhatsAppService;
+
 
 class OrderController extends Controller
 {
@@ -61,7 +63,7 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
+    public function store(Request $request,WhatsAppService $whatsapp)
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -85,8 +87,9 @@ class OrderController extends Controller
             $stock->receive_qty -= $validated['qty'];
             $stock->save();
 
-            $orderRef = Order::generateOrderRef();
-            dd($orderRef);
+            $orderRef = $this->generateOrderRef();
+          
+          
 
             $order = Order::create([
                 'customer_id' => $validated['customer_id'],
@@ -112,6 +115,16 @@ class OrderController extends Controller
                 'status' => $paymentStatus,
             ]);
 
+            //send msg to whastapp
+            $customer = Customer::findOrFail($validated['customer_id']);
+
+            $rawPhone = $customer->contact_number;
+            $formattedPhone = '+94' . ltrim($rawPhone, '0');
+
+            $message = "Hi {$customer->cust_fname}  {$customer->cust_lname}, your order #{$orderRef} has been placed successfully. Total: Rs. {$amount}. Thank you!";
+
+            $whatsapp->sendMessage($formattedPhone, $message);
+
             \DB::commit();
 
             return redirect()->route('order.index')->with('success', 'Order and payment recorded successfully.');
@@ -119,6 +132,22 @@ class OrderController extends Controller
             \DB::rollBack();
             return back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()])->withInput();
         }
+    }
+
+    public static function generateOrderRef()
+    {
+        
+        $latest = DB::table('orders')
+            ->select('order_ref')
+            ->where('order_ref', 'LIKE', 'ORD-%')
+            ->orderByDesc(DB::raw("CAST(SUBSTRING(order_ref, 5) AS UNSIGNED)"))
+            ->first();
+
+        $number = $latest
+            ? ((int) substr($latest->order_ref, 4)) + 1
+            : 1;
+
+        return 'ORD-' . str_pad($number, 5, '0', STR_PAD_LEFT);
     }
 
 
