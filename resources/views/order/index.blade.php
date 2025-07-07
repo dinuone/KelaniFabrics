@@ -128,6 +128,45 @@
         border: none;
         color: white;
     }
+
+      .table-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin-right: 8px;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .action-btn-delete {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .action-btn-delete:hover {
+        background-color: rgba(220, 53, 69, 0.2);
+    }
+
+    .action-btn-edit {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+
+    .action-btn-edit:hover {
+        background-color: rgba(255, 193, 7, 0.2);
+    }
 </style>
 @endsection
 
@@ -201,7 +240,16 @@
                                     <td><span class="payment-amount">Rs. {{ number_format($order->payment?->amount ?? 0, 2) }}</span></td>
                                     <td><span class="payment-method-badge">{{ $order->order_type?? '-' }}</span></td>
                                     <td><span class="orer-status-badge">{{ $order->status?? '-' }}</span></td>
-                                    
+                                     <td>
+                                            <div class="table-actions">
+                                                <a href="javascript:void(0)" class="action-btn action-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="appendId('{{ $order->id }}')">
+                                                    <i class="bi bi-trash3"></i>
+                                                </a>
+                                                <a href="{{ route('order.edit', $order->id) }}" class="action-btn action-btn-edit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                            </div>
+                                        </td>
                                 </tr>
                                 @endforeach
 
