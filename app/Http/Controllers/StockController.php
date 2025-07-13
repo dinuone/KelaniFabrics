@@ -14,6 +14,7 @@ use App\Models\Color;
 use App\Models\Size;
 use App\Exports\StockExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -156,5 +157,15 @@ class StockController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('stock.index')->with('error', 'Failed to delete stock: ' . $e->getMessage());
         }
+    }
+
+    public function exportPdf()
+    {
+        $stocks = Stock::with(['product.category', 'product.subCategory', 'color', 'size'])->get();
+
+        $pdf = Pdf::loadView('stock.pdf', compact('stocks'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('stock_report.pdf');
     }
 }

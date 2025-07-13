@@ -250,6 +250,10 @@
                         <a href="{{ route('product.export') }}" class="btn btn-modern btn-outline-primary">
                             <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
                         </a>
+                        
+                        <a href="{{ route('product.exportPdf') }}" class="btn btn-modern btn-outline-danger ms-2">
+                            <i class="bi bi-filetype-pdf me-2"></i>Export to PDF
+                        </a>
                     </div>
                 </div>
             </div>

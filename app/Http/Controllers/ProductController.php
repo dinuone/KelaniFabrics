@@ -14,6 +14,7 @@ use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Exports\ProductsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -233,5 +234,15 @@ class ProductController extends Controller
     {
         $product->delete();
         return redirect()->route('product.index')->with($type,$message);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $products = Product::with(['category', 'subCategory', 'colors'])->get();
+
+        $pdf = Pdf::loadView('product.pdf', compact('products'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('products.pdf');
     }
 }

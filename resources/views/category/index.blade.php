@@ -234,6 +234,9 @@
                     <a href="{{ route('category.export') }}" class="btn btn-modern btn-outline-primary">
                         <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
                     </a>
+                    <a href="{{ route('category.exportPdf') }}" class="btn btn-modern btn-outline-danger">
+                        <i class="bi bi-filetype-pdf me-2"></i>Export to PDF
+                    </a>
                 </div>
             </div>
         </div>

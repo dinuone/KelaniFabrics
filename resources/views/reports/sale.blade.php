@@ -129,6 +129,11 @@
                   <a href="{{ route('sale.export', request()->only(['from_date', 'to_date', 'status', 'search'])) }}" class="mt-4 btn btn-modern btn-outline-primary ms-2">
                     <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
                 </a>
+
+
+                <a href="{{ route('sale.exportPdf', request()->only(['from_date', 'to_date', 'status', 'search'])) }}" class="mt-4 btn btn-modern btn-outline-danger">
+                    <i class="bi bi-filetype-pdf me-2"></i> Export to PDF
+                </a>
             </div>
         </form>
 >

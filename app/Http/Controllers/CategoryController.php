@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Services\CategoryService;
 use App\Exports\CategoryExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Enums\StatusEnum;
 
 class CategoryController extends Controller
 {
@@ -89,6 +91,16 @@ class CategoryController extends Controller
             category : $category
         );
         return redirect()->route('category.index')->with($type,$message);
+    }
+
+    public function exportPdf()
+    {
+        $categories = Category::all();
+
+        $pdf = Pdf::loadView('category.pdf', compact('categories'))
+                ->setPaper('a4', 'portrait');
+
+        return $pdf->download('category_report.pdf');
     }
 
 }

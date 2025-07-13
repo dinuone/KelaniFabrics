@@ -54,6 +54,8 @@
                 <input type="hidden" name="customer_id" id="customer_id" value="{{ $order->customer_id ?? '' }}">
             </div>
 
+            
+
             {{-- Customer Contact Number --}}
             <div class="mb-3">
                 <label class="form-label">Customer Contact</label>

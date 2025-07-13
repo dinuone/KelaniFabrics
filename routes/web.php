@@ -145,11 +145,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
    Route::get('/sub-category/export', [SubCategoryController::class, 'export'])->name('sub_category.export');
    Route::get('/report/sale/export', [SaleReportController::class, 'export'])->name('sale.export');
    Route::get('/report/delivery/export', [DeliveryReportController::class, 'export'])->name('delivery.export');
+
+
+   Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('order.export.pdf');
+   Route::get('/products/export-pdf', [ProductController::class, 'exportPdf'])->name('product.exportPdf');
    
 
    //reports
    Route::get('/report/sales', [SaleReportController::class, 'generate'])->name('sales.report');
    Route::get('/report/delivery', [DeliveryReportController::class, 'generate'])->name('delivery.report');
+   Route::get('/customers/export-pdf', [CustomerController::class, 'exportPdf'])->name('customer.exportPdf');
+   Route::get('/payments/export-pdf', [PaymentController::class, 'exportPdf'])->name('payments.exportPdf');
+   Route::get('/stock/export-pdf', [StockController::class, 'exportPdf'])->name('stock.exportPdf');
+   Route::get('/category/export-pdf', [CategoryController::class, 'exportPdf'])->name('category.exportPdf');
+   Route::get('/sub-category/export-pdf', [SubCategoryController::class, 'exportPdf'])->name('sub_category.exportPdf');
+   Route::get('/sales/export-pdf', [SaleReportController::class, 'exportPdf'])->name('sale.exportPdf');
+   Route::get('/delivery/export-pdf', [DeliveryReportController::class, 'exportPdf'])->name('delivery.exportPdf');
+
+
 
 });
 

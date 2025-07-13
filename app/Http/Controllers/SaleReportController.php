@@ -9,6 +9,7 @@ use App\Exports\SaleReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class SaleReportController extends Controller
@@ -64,6 +65,36 @@ class SaleReportController extends Controller
        
 
         return view('reports.sale', compact('payments', 'totalAmount'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Payment::with(['order.stock.product']);
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $query->whereHas('order', function ($q) use ($request) {
+                $q->where('order_ref', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $payments = $query->get();
+        $totalAmount = $payments->sum('amount');
+
+        $pdf = Pdf::loadView('reports.sale_pdf', compact('payments', 'totalAmount'))->setPaper('a4', 'landscape');
+
+        return $pdf->download('sales_report.pdf');
     }
 
 

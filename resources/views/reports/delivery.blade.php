@@ -8,7 +8,7 @@
         background-color: #f8f9fa;
     }
     .page-header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #1e3a8a 0%, #939394 100%);
         padding: 20px;
         border-radius: 12px;
         margin-bottom: 25px;
@@ -124,6 +124,10 @@
              <div class="col-md-2 d-flex align-items-end">
                  <a href="{{ route('delivery.export', request()->only(['from_date', 'to_date', 'status', 'search'])) }}" class=" mt-4 btn btn-modern btn-outline-primary ms-2">
                     <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
+                </a>
+                <a href="{{ route('delivery.exportPdf', request()->only(['from_date', 'to_date', 'status', 'search'])) }}" 
+                class="mt-4 btn btn-modern btn-outline-primary ms-2">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Export to PDF
                 </a>
             </div>
         </form>

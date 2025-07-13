@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Exports\DeliveryReportExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DeliveryReportController extends Controller
 {
@@ -43,5 +44,33 @@ class DeliveryReportController extends Controller
         $fileName = 'delivery-report-' . now()->format('Ymd_His') . '.xlsx';
 
         return Excel::download(new DeliveryReportExport($filters), $fileName);
+    }
+
+
+    public function exportPdf(Request $request)
+    {
+        $query = \App\Models\Order::with(['customer', 'stock.product']);
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('order_ref', 'like', '%' . $request->search . '%');
+        }
+
+        $orders = $query->get();
+
+        $pdf = Pdf::loadView('reports.deliver_pdf', compact('orders'));
+
+        return $pdf->download('delivery_report.pdf');
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\RedirectResponse;
 use App\Exports\PaymentsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -97,5 +98,15 @@ class PaymentController extends Controller
             payment : $payment
         );
         return redirect()->route('payment.index')->with($type,$message);
+    }
+
+    public function exportPdf()
+    {
+        $payments = Payment::with(['order.stock.product'])->get();
+
+        $pdf = Pdf::loadView('payment.pdf', compact('payments'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('payment.pdf');
     }
 }

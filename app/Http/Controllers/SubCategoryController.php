@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sub_category;
+use App\Models\Subcategory;
 use App\Http\Requests\StoreSub_categoryRequest;
 use App\Http\Requests\UpdateSub_categoryRequest;
 use App\Models\Category;
@@ -11,6 +11,8 @@ use App\Services\CategoryService;
 use Illuminate\Http\RedirectResponse;
 use App\Exports\SubCategoryExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 use function PHPSTORM_META\type;
 
@@ -109,5 +111,15 @@ class SubCategoryController extends Controller
     public function export()
     {
         return Excel::download(new SubCategoryExport, 'sub_categories.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $sub_categories = SubCategory::with('category')->get();
+
+        $pdf = Pdf::loadView('subCategory.pdf', compact('sub_categories'))
+                ->setPaper('a4', 'portrait');
+
+        return $pdf->download('subcategory_report.pdf');
     }
 }

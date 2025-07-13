@@ -15,6 +15,7 @@ use App\Exports\OrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Services\WhatsAppService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class OrderController extends Controller
@@ -280,5 +281,19 @@ class OrderController extends Controller
             order : $order
         );
         return redirect()->route('order.index')->with($type,$message);
+    }
+
+
+    
+    public function exportPdf(Request $request)
+    {
+        $orders = Order::with(['stock.product', 'stock.color', 'stock.size', 'payment'])
+                    ->latest()
+                    ->get();
+
+        $pdf = Pdf::loadView('order.pdf', compact('orders'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('orders.pdf');
     }
 }

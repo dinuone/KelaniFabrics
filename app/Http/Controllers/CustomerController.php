@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Exports\CustomerExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class CustomerController extends Controller
@@ -118,6 +119,17 @@ class CustomerController extends Controller
     public function export()
     {
         return Excel::download(new CustomerExport, 'customers.xlsx');
+    }
+
+
+    public function exportPdf()
+    {
+        $customers = Customer::all();
+
+        $pdf = Pdf::loadView('customer.pdf', compact('customers'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('customers.pdf');
     }
 
 
