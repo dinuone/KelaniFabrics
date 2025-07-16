@@ -72,36 +72,37 @@ class SubCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Sub_category $sub_category)
+    public function edit(SubCategory $sub_category)
     {
-        return view('subcategory.manage',compact('sub_category'));
+        $category = $this->categoryService->getActiveCategories();
+        return view('subcategory.manage', compact('sub_category', 'category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSub_categoryRequest $request, Sub_category $sub_category)
+    public function update(UpdateSub_categoryRequest $request, SubCategory $sub_category)
     {
         list($type,$message)=$this->subcategoryService->updateSubCategory(
             sub_category:$sub_category,
-            catId: $request['CatName'],
+            catId:  $request['catName'],
             //catId:$request['catId'],
             subCatName: $request['subCatName'],
             subCatStatus: $request['subCatStatus'],
         );
-         return redirect()->route('subcategory.index')->with($type,$message);
+         return redirect()->route('sub_category.index')->with($type,$message);
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sub_category $sub_category):RedirectResponse
+    public function destroy(SubCategory $sub_category):RedirectResponse
     {
         list($type,$message)=$this->subcategoryService->deleteSubCategory(
             sub_category:$sub_category,
         );
-        return redirect()->route('subcategory.index')->with($type,$message);
+        return redirect()->route('sub_category.index')->with($type,$message);
     }
     public function getSubCategoryByCatId($catId)
     {

@@ -255,8 +255,10 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::with(['customer', 'stock.product', 'payment'])->findOrFail($id);
-        return view('order.show', compact('order'));
+         $order = Order::with(['customer', 'stock.product', 'payment'])->findOrFail($id);
+         $customers = Customer::all();
+
+        return view('order.show', compact('order','customers'));
     }
 
     /**
@@ -264,11 +266,11 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        $stocks = Stock::all();
+        $stocks = Stock::with(['product', 'color', 'size'])->get();
+        $customers = Customer::all();
 
-        return view('order.manage', compact('order', 'stocks'));
+        return view('order.manage', compact('order', 'stocks', 'customers'));
     }
-
 
  
 

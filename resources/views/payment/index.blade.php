@@ -147,6 +147,7 @@
                                 <th>Product</th>
                                 <th>Qty</th>
                                 <th>Payment Method</th>
+                                 <th>Payment Status</th>
                                 <th>Order Status</th>
                             </tr>
                         </thead>
@@ -160,6 +161,7 @@
                                     <td>{{ $payment->order->stock->product->product_name ?? '-' }}</td>
                                     <td>{{ $payment->order->qty ?? '-' }}</td>
                                     <td>{{ $payment->order->order_type ?? '-' }}</td>
+                                    <td>{{ $payment->status ?? '-' }}</td>
                                     <td>{{ $payment->order->status ?? '-' }}</td>
                                 </tr>
                             @endforeach

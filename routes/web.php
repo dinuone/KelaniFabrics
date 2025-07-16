@@ -22,6 +22,7 @@ use App\Exports\PaymentsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\SaleReportController;
 use App\Http\Controllers\DeliveryReportController;
+use App\Http\Controllers\ProfileController;
 
 
 
@@ -133,6 +134,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/roles/edit/{role}', [RoleController::class,'edit'])->name('roles.edit');
     Route::patch('/roles/update/{role}', [RoleController::class,'update'])->name('roles.update');
     Route::delete('/roles/delete/{role}', [RoleController::class,'destroy'])->name('roles.destroy');
+
+     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 
     
     // Export routes

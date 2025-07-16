@@ -221,6 +221,7 @@
                                     <th>Paid Date</th>
                                     <th>Amount</th>
                                     <th>Payment Method</th>
+                                    <th>Payment Status</th>
                                     <th>Order Status</th>
                                 </tr>
                             </thead>
@@ -242,7 +243,9 @@
                                     <td><span class="payment-date">{{ $order->payment?->created_at ?? '-' }}</span></td>
                                     <td><span class="payment-amount">Rs. {{ number_format($order->payment?->amount ?? 0, 2) }}</span></td>
                                     <td><span class="payment-method-badge">{{ $order->order_type?? '-' }}</span></td>
+                                      <td><span class="orer-status-badge">{{ $order->payment->status?? '-' }}</span></td>
                                     <td><span class="orer-status-badge">{{ $order->status?? '-' }}</span></td>
+                                  
                                      <td>
                                             <div class="table-actions">
                                                 <a href="javascript:void(0)" class="action-btn action-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="appendId('{{ $order->id }}')">

@@ -25,7 +25,10 @@
                         <select class="form-select" aria-label="Default select example" name="catName" id="catName">
                             <option selected>Select category</option>
                             @foreach ($category as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->cat_name }}</option>
+                               <option value="{{ $cat->id }}"
+                                {{ (isset($sub_category) && $sub_category->cat_id == $cat->id) ? 'selected' : '' }}>
+                                {{ $cat->cat_name }}
+                            </option>
                             @endforeach
                         </select>
                         <span class="test-danger">

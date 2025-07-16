@@ -160,11 +160,12 @@
                             ({{ auth()->user()->getRoleNames()->join(', ') ?: 'No Role' }})
                         </span>
                     @endauth
+                    
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li>
-                        <a class="dropdown-item" href="/profile">
+                        <a class="dropdown-item" href="{{ route('profile.show') }}">
                             <i class="fas fa-user-circle me-2"></i> View Profile
                         </a>
                     </li>

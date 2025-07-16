@@ -39,24 +39,25 @@
                 @method('PATCH')
             @endif
 
-            {{-- Customer Search --}}
-            <div class="mb-3 position-relative">
-                <label for="customerSearch" class="form-label">Search Customer</label>
-                <input 
-                    type="text" 
-                    id="customerSearch" 
-                    class="form-control" 
-                    placeholder="Type customer name..." 
-                    autocomplete="off" 
-                    value="{{ isset($order) ? $order->customer->cust_fname . ' ' . $order->customer->cust_lname : '' }}"
-                >
-                <ul id="customerSuggestions" class="list-group position-absolute w-100" style="z-index: 999;"></ul>
-                <input type="hidden" name="customer_id" id="customer_id" value="{{ $order->customer_id ?? '' }}">
+           {{-- Customer Dropdown --}}
+            <div class="mb-3">
+                <label for="customer_id" class="form-label">Select Customer</label>
+                <select class="form-control select2" name="customer_id" id="customer_id" required>
+                    <option value="">-- Select Customer --</option>
+                    @foreach ($customers as $customer)
+                        <option 
+                            value="{{ $customer->id }}" 
+                            data-contact="{{ $customer->contact_number }}" 
+                            data-address="{{ $customer->address }}"
+                            {{ old('customer_id', $order->customer_id ?? '') == $customer->id ? 'selected' : '' }}
+                        >
+                            {{ $customer->cust_fname }} {{ $customer->cust_lname }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
-            
-
-            {{-- Customer Contact Number --}}
+            {{-- Contact (auto-filled) --}}
             <div class="mb-3">
                 <label class="form-label">Customer Contact</label>
                 <input 
@@ -67,6 +68,7 @@
                     disabled
                 >
             </div>
+
 
             {{-- Product --}}
             <div class="mb-3">
@@ -181,6 +183,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const customerContact = document.getElementById('customer_contact');
     const productPriceInput = document.getElementById('product_price');
     const stockSelect = document.getElementById('stock_id');
+    
+    const customerSelect = document.getElementById('customer_id');
+    const contactInput = document.getElementById('customer_contact');
+    const addressTextarea = document.getElementById('shipping_address');
+
+    customerSelect.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        contactInput.value = selectedOption.dataset.contact || '';
+        addressTextarea.value = selectedOption.dataset.address || '';
+    });
 
     let timeout = null;
 
@@ -197,49 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update price when product selection changes
     stockSelect.addEventListener('change', updatePrice);
 
-    // Customer search input
-    input.addEventListener('input', function () {
-        const query = this.value.trim();
-
-        clearTimeout(timeout);
-        suggestions.innerHTML = '';
-
-        if (query.length < 2) return;
-
-        timeout = setTimeout(() => {
-            fetch(`{{ route('customers.search') }}?query=${encodeURIComponent(query)}`)
-                .then(res => res.json())
-                .then(data => {
-                    suggestions.innerHTML = '';
-                    data.forEach(customer => {
-                        const item = document.createElement('li');
-                        item.classList.add('list-group-item', 'list-group-item-action');
-                        item.textContent = `${customer.name}`;
-                        item.dataset.id = customer.id;
-                        item.dataset.contact = customer.contact_number;
-                        item.dataset.address = customer.address || '';
-                        item.addEventListener('click', () => {
-                            input.value = customer.name;
-                            customerId.value = customer.id;
-                            customerContact.value = customer.contact_number;
-                            // Set shipping address from customer record
-                            document.getElementById('shipping_address').value = customer.address || '';
-                            suggestions.innerHTML = '';
-                        });
-
-                        suggestions.appendChild(item);
-                    });
-
-                    if (data.length === 0) {
-                        const noResult = document.createElement('li');
-                        noResult.classList.add('list-group-item', 'text-muted');
-                        noResult.textContent = 'No customers found.';
-                        suggestions.appendChild(noResult);
-                    }
-                });
-        }, 300);
-    });
-
+ 
     // Hide suggestions when clicking outside
     document.addEventListener('click', (e) => {
         if (!input.contains(e.target) && !suggestions.contains(e.target)) {
