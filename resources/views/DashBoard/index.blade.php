@@ -203,10 +203,40 @@
                 <div class="stat-value">{{ $count }}</div>
                 <div class="stat-trend">
                     <span>📊</span>
-                    <span>View Details</span>
+                   
                 </div>
             </div>
         @endforeach
+        @can('view reports')
+            <div class="stat-card">
+                <h3>Sale Report</h3>
+                <div class="stat-trend">
+                    <span>📊</span>
+                    <a href="{{ route('sales.report') }}" class="text-decoration-none text-dark">
+                    <span>View Sale Report</span>
+                    </a>
+                </div>
+            </div>
+             <div class="stat-card">
+                <h3>Customer Report</h3>
+                <div  class="stat-trend">
+                    <span>📊</span>
+                    <a href="{{ route('customer.report') }}" class="text-decoration-none text-dark">
+                    <span>View Customer Report</span>
+                    </a>
+                </div>
+            </div>
+             <div class="stat-card">
+                <h3>Delivery Report</h3>
+                <div class="stat-trend">
+                    <span>📊</span>
+                    <a href="{{ route('delivery.report') }}" class="text-decoration-none text-dark">
+                    <span>View Delivery Report</span>
+                    </a>    
+                </div>
+            </div>
+            @endcan
+
     </div>
 
     <div class="charts-section">

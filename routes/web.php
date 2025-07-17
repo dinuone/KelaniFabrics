@@ -23,6 +23,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\SaleReportController;
 use App\Http\Controllers\DeliveryReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerReportController;
 
 
 
@@ -148,6 +149,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
    Route::get('/sub-category/export', [SubCategoryController::class, 'export'])->name('sub_category.export');
    Route::get('/report/sale/export', [SaleReportController::class, 'export'])->name('sale.export');
    Route::get('/report/delivery/export', [DeliveryReportController::class, 'export'])->name('delivery.export');
+   Route::get('/report/customer/export', [CustomerReportController::class, 'exportExcel'])->name('customer.reportExcel');
 
 
    Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('order.export.pdf');
@@ -164,6 +166,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
    Route::get('/sub-category/export-pdf', [SubCategoryController::class, 'exportPdf'])->name('sub_category.exportPdf');
    Route::get('/sales/export-pdf', [SaleReportController::class, 'exportPdf'])->name('sale.exportPdf');
    Route::get('/delivery/export-pdf', [DeliveryReportController::class, 'exportPdf'])->name('delivery.exportPdf');
+   Route::get('/report/customer', [CustomerReportController::class, 'generate'])->name('customer.report');
+   Route::get('/report/customer/pdf', [CustomerReportController::class, 'exportPdf'])->name('customer.reportPdf');
+
 
 
 

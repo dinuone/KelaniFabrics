@@ -268,7 +268,7 @@
                             </a>
                         </li>
                         @endcan
-
+{{-- 
                         @can('view reports')
                         <li class="nav-item">
                             <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/sales*') ? 'bg-blue-700' : '' }}" href="/report/sales">
@@ -280,12 +280,12 @@
                                 <i class="fas fa-truck  fa-lg me-3"></i> Delivery Report
                             </a>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/order*') ? 'bg-blue-700' : '' }}" href="/report/order">
-                                <i class="fas fa-shopping-cart  fa-lg me-3"></i> Order Report
+                        <li class="nav-item">
+                            <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('/report/customer*') ? 'bg-blue-700' : '' }}" href="/report/customer">
+                                <i class="fas fa-shopping-cart  fa-lg me-3"></i> Customer Report
                             </a>
-                        </li> --}}
-                        @endcan
+                        </li>
+                        @endcan --}}
 
 
                     </ul>
