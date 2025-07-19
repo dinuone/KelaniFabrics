@@ -80,7 +80,7 @@ class EmployeeController extends Controller
                 'contact_number' => $request->phoneNumber,
                 'join_date' => $request->joinDate,
                 'resign_date' => $request->resignDate,
-                'user_id' => $user->id,  
+                'user_id' => $user->id,
             ]);
 
             DB::commit();

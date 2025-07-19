@@ -8,24 +8,101 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         /* Fabric background with single image */
-        .fabric-bg {
-            /* Primary fabric image */
+        /* .fabric-bg {
+
             background-image:
-                /* Overlay patterns for texture */
+
                 linear-gradient(45deg, rgba(59, 130, 246, 0.15) 25%, transparent 25%),
                 linear-gradient(-45deg, rgba(59, 130, 246, 0.15) 25%, transparent 25%),
                 linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%),
                 linear-gradient(-45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%),
-                /* Gradient overlay for better text readability */
+
                 linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%),
-                /* Fabric image - replace with your actual image path */
+
                 url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80');
 
             background-size: 60px 60px, 60px 60px, 60px 60px, 60px 60px, cover, cover;
             background-position: 0 0, 0 30px, 30px -30px, -30px 0px, center, center;
             background-repeat: repeat, repeat, repeat, repeat, no-repeat, no-repeat;
             animation: fabricPattern 25s linear infinite;
-        }
+        } */
+
+
+        .fabric-bg {
+    position: relative;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden;
+}
+
+/* Background pattern with your local image */
+.fabric-pattern {
+    background-image:
+        /* Your local image */
+        url("{{ asset('images/profile.jpg') }}"),
+        /* Pattern overlays */
+        linear-gradient(45deg, rgba(59, 130, 246, 0.15) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(59, 130, 246, 0.15) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%),
+        /* Color overlay */
+        linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+
+    background-size:
+        cover, /* Image size */
+        60px 60px, 60px 60px, 60px 60px, 60px 60px, /* Pattern sizes */
+        cover; /* Gradient size */
+
+    background-position:
+        center, /* Image position */
+        0 0, 0 30px, 30px -30px, -30px 0px, /* Pattern positions */
+        center; /* Gradient position */
+
+    background-repeat:
+        no-repeat, /* Image repeat */
+        repeat, repeat, repeat, repeat, /* Pattern repeats */
+        no-repeat; /* Gradient repeat */
+
+    background-blend-mode: overlay;
+    animation: fabricPattern 25s linear infinite;
+    opacity: 0.9; /* Adjust transparency */
+}
+
+/* Texture overlay */
+.fabric-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
+        );
+    z-index: 1;
+}
+
+/* Content styling */
+.overlay-content {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+
 
         @keyframes fabricPattern {
             0% { background-position: 0 0, 0 30px, 30px -30px, -30px 0px, center, center; }
@@ -122,13 +199,13 @@
 </head>
 <body class="min-h-screen flex">
     <!-- Left Side (Form) -->
-    <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-12 bg-gray-50">
+    <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-12 bg-blue-200">
         <div class="max-w-md w-full mx-auto">
             <div class="form-container">
                 <!-- Logo/Brand -->
                 <div class="text-center mb-8">
                     <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
-                        <!-- Your SVG Logo -->
+                        <img src="{{ asset('images/logo.jpg') }}" alt="logo">
                     </div>
                     <h1 class="text-3xl font-bold text-blue-700 mb-2">Kelani Fabrics</h1>
                     <p class="text-gray-500">Admin Portal Access</p>
@@ -206,16 +283,14 @@
     </div>
 
     <!-- Right Side (Fabric Background with Image) -->
-    <div class="hidden md:block md:w-1/2 relative fabric-bg" id="fabricBackground">
-
-        <!-- Fabric texture overlay -->
+    <div class="hidden md:block md:w-1/2 relative" id="fabricBackground">
+         <div class="absolute inset-0 bg-cover bg-center z-0">
+        <img src="{{ asset('images/profile2.jpg') }}" alt="background"
+             class="w-full h-full object-cover">
+        </div>
+        {{-- <img src="{{ asset('images/profile.jpg') }}" alt="profile"> --}}
         <div class="fabric-texture"></div>
 
-        <!-- Fabric-themed floating elements -->
-        <div class="fabric-icon">🧵</div>
-        <div class="fabric-icon">✂️</div>
-        <div class="fabric-icon">📏</div>
-        <div class="fabric-icon">🎨</div>
 
         <!-- Overlay content -->
         <div class="absolute inset-0 flex items-center justify-center p-8">
@@ -240,7 +315,7 @@
 
                 <!-- Quality showcase -->
                 <div class="mt-8 text-sm opacity-75">
-                    <p>✨ Premium textile management system</p>
+                    <p>✨ Premium fabric management system</p>
                 </div>
             </div>
         </div>

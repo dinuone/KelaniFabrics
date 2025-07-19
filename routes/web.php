@@ -51,7 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashBoardController::class, 'index'] )->name('dashboard');
 
-    
+
     Route::get('/employee',[EmployeeController::class,'index'])->name('employee.index');
     Route::get('/employee/create',[EmployeeController::class,'create'])->name('employee.create');
     Route::post('/employee/store', [EmployeeController::class,'store'])->name('employee.store');
@@ -83,7 +83,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/order/delete/{order}', [OrderController::class,'destroy'])->name('order.destroy');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');
     //payment
-    
+
     Route::get('/payment',[PaymentController::class,'index'])->name('payment.index');
     Route::get('/payment/create',[PaymentController::class,'create'])->name('payment.create');
     Route::post('/payment/store', [PaymentController::class,'store'])->name('payment.store');
@@ -99,7 +99,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/stock/delete/{stock}', [StockController::class,'deleteStock'])->name('stock.destroy');
     Route::get('/stock/edit/{stock}', [StockController::class,'edit'])->name('stock.edit');
     Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-    
+
     //category
     Route::get('/category',[CategoryController::class,'index'])->name('category.index');
     Route::get('/category/create',[CategoryController::class,'create'])->name('category.create');
@@ -138,7 +138,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
      Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 
-    
+
     // Export routes
    Route::get('/payment/export', [PaymentController::class, 'export'])->name('payments.export');
    Route::get('/products/export', [ProductController::class, 'export'])->name('product.export');
@@ -154,7 +154,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
    Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('order.export.pdf');
    Route::get('/products/export-pdf', [ProductController::class, 'exportPdf'])->name('product.exportPdf');
-   
+
 
    //reports
    Route::get('/report/sales', [SaleReportController::class, 'generate'])->name('sales.report');
@@ -169,7 +169,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
    Route::get('/report/customer', [CustomerReportController::class, 'generate'])->name('customer.report');
    Route::get('/report/customer/pdf', [CustomerReportController::class, 'exportPdf'])->name('customer.reportPdf');
 
-
+// routes/web.php
+    Route::get('/chart-data', [DashboardController::class, 'getChartData']);
 
 
 });

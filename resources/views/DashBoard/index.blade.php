@@ -167,6 +167,14 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .chart-totals {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.1rem;
+}
     </style>
 @endsection
 
@@ -183,7 +191,7 @@
             </div>
         </div>
     @endauth
-    
+
     <div class="stats-grid">
         @php
             $data = [
@@ -203,11 +211,11 @@
                 <div class="stat-value">{{ $count }}</div>
                 <div class="stat-trend">
                     <span>📊</span>
-                   
+
                 </div>
             </div>
         @endforeach
-        @can('view reports')
+        {{-- @can('view reports')
             <div class="stat-card">
                 <h3>Sale Report</h3>
                 <div class="stat-trend">
@@ -232,10 +240,10 @@
                     <span>📊</span>
                     <a href="{{ route('delivery.report') }}" class="text-decoration-none text-dark">
                     <span>View Delivery Report</span>
-                    </a>    
+                    </a>
                 </div>
             </div>
-            @endcan
+            @endcan --}}
 
     </div>
 
@@ -389,6 +397,89 @@
         });
 
         // // Bar Chart - Monthly Performance (using sample data)
+
+
+            // Fetch data from Laravel backend
+fetch('/chart-data')
+    .then(response => response.json())
+    .then(data => {
+        const barCtx = document.getElementById('barChart').getContext('2d');
+
+        // Format numbers for display
+        const formatNumber = num => {
+            if (num % 1 === 0) return num.toLocaleString();
+            return parseFloat(num).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        };
+
+        // Create chart
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Paid Payments',
+                        data: data.paid,
+                        backgroundColor: 'rgba(46, 204, 113, 0.8)',
+                        borderColor: '#2ecc71',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    },
+                    {
+                        label: 'Pending Payments',
+                        data: data.pending,
+                        backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                        borderColor: '#e74c3c',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Amount' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Months' }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: context => {
+                                return `${context.dataset.label}: ${formatNumber(context.raw)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Display totals below the chart
+        const totalsContainer = document.createElement('div');
+        totalsContainer.className = 'chart-totals mt-4 text-center';
+        totalsContainer.innerHTML = `
+            <div class="inline-block mx-4">
+                <span class="font-bold text-green-600">Total Paid:</span>
+                <span>${formatNumber(parseFloat(data.totals.paid))}</span>
+            </div>
+            <div class="inline-block mx-4">
+                <span class="font-bold text-red-600">Total Pending:</span>
+                <span>${formatNumber(parseFloat(data.totals.pending))}</span>
+            </div>
+        `;
+
+        document.getElementById('barChart').parentNode.appendChild(totalsContainer);
+    })
+    .catch(error => console.error('Error:', error));
+
         // const barCtx = document.getElementById('barChart').getContext('2d');
         // new Chart(barCtx, {
         //     type: 'bar',

@@ -124,7 +124,7 @@
             }
         }
 
-      
+
 
         .btn-toggle {
             background: none;
@@ -160,7 +160,7 @@
                             ({{ auth()->user()->getRoleNames()->join(', ') ?: 'No Role' }})
                         </span>
                     @endauth
-                    
+
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
@@ -268,7 +268,32 @@
                             </a>
                         </li>
                         @endcan
-{{-- 
+
+                        @can('view reports')
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center dropdown-toggle {{ request()->is('report*') ? 'bg-blue-700' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chart-bar fa-lg me-3"></i> Reports
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+                                <li>
+                                    <a class="dropdown-item text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/sales*') ? 'bg-blue-700' : '' }}" href="/report/sales">
+                                        <i class="fas fa-dollar-sign fa-lg me-3"></i> Sale Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/delivery*') ? 'bg-blue-700' : '' }}" href="/report/delivery">
+                                        <i class="fas fa-truck fa-lg me-3"></i> Delivery Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/customer*') ? 'bg-blue-700' : '' }}" href="/report/customer">
+                                        <i class="fas fa-shopping-cart fa-lg me-3"></i> Customer Report
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endcan
+{{--
                         @can('view reports')
                         <li class="nav-item">
                             <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('report/sales*') ? 'bg-blue-700' : '' }}" href="/report/sales">
