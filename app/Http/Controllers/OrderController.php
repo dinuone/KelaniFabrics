@@ -16,6 +16,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Services\WhatsAppService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\EcomOrder;
+use App\Models\EcomOrderItem;
+use Illuminate\Support\Facades\Validator;
 
 
 class OrderController extends Controller
@@ -297,5 +300,78 @@ class OrderController extends Controller
                 ->setPaper('a4', 'landscape');
 
         return $pdf->download('orders.pdf');
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_id' => 'nullable|exists:customers,id',
+            'order_number' => 'required|string|unique:ecomorders,order_number',
+            'payment_method' => 'nullable|string',
+            'status' => 'nullable|string',
+            'total_amount' => 'required|numeric|min:0',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.color_id' => 'required|exists:colors,id',
+            'items.*.size_id' => 'required|exists:sizes,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $order = EcomOrder::create([
+                'order_number' => $validated['order_number'],
+                'customer_id' => $validated['customer_id'] ?? null,
+                'payment_method' => $validated['payment_method'] ?? null,
+                'status' => $validated['status'] ?? 'pending',
+                'total_amount' => $validated['total_amount'],
+            ]);
+
+            foreach ($validated['items'] as $item) {
+                $stock = Stock::where('product_id', $item['product_id'])
+                    ->where('color_id', $item['color_id'])
+                    ->where('size_id', $item['size_id'])
+                    ->first();
+
+                if (!$stock) {
+                    throw new \Exception("Stock not found for the selected product, color, and size.");
+                }
+
+                if ($stock->receive_qty < $item['quantity']) {
+                    throw new \Exception("Not enough stock for product ID {$item['product_id']}.");
+                }
+
+                // Reduce stock
+                $stock->receive_qty -= $item['quantity'];
+                $stock->save();
+
+                // Create order item
+                EcomOrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'color_id' => $item['color_id'],
+                    'size_id' => $item['size_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $stock->price,
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order placed successfully',
+                'order_id' => $order->id,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

@@ -184,3 +184,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Route::get('/layout', function () {
 //     return view('layout.nav');
 // });
+
+
+
