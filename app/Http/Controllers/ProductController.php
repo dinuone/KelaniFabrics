@@ -245,4 +245,6 @@ class ProductController extends Controller
 
         return $pdf->download('products.pdf');
     }
+
+  
 }

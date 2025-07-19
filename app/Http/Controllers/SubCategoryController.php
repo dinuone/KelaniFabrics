@@ -123,4 +123,7 @@ class SubCategoryController extends Controller
 
         return $pdf->download('subcategory_report.pdf');
     }
+
+
+   
 }
