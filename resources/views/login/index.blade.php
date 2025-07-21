@@ -255,9 +255,9 @@
                                 {{ old('remember') ? 'checked' : '' }}>
                             <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
                         </div>
-                        <div class="text-sm">
+                        {{-- <div class="text-sm">
                             <a href="{{ route('password.request') }}" class="text-blue-600 hover:text-blue-800 font-medium transition">Forgot password?</a>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <button type="submit" class="login-btn w-full py-3 px-4 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
