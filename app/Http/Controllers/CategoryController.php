@@ -103,14 +103,6 @@ class CategoryController extends Controller
         return $pdf->download('category_report.pdf');
     }
 
-    public function CategoryList()
-    {
-        $categories = Category::select('id', 'cat_name')->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $categories
-        ]);
-    }
+   
 
 }

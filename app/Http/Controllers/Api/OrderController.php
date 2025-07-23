@@ -76,8 +76,12 @@ class OrderController extends Controller
                     throw new \Exception("Stock not found for the selected product, color, and size.");
                 }
 
-                if ($stock->receive_qty < $item['quantity']) {
-                    throw new \Exception("Not enough stock for product ID {$item['product_id']}.");
+               if ($stock->receive_qty < $item['quantity']) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Not enough stock for product ID {$item['product_id']}.",
+                        'out_of_stock' => true,
+                    ], 200);
                 }
 
                 // Reduce stock quantity
