@@ -105,6 +105,7 @@ class OrderController extends Controller
                 'success' => true,
                 'message' => 'Order placed successfully',
                 'order_ref' => $orderNumber,
+                'total_amount' => $order->total_amount,
             ]);
 
         } catch (\Exception $e) {
@@ -117,5 +118,22 @@ class OrderController extends Controller
         }
     }
 
+    public function markOrderAsPaid(Request $request)
+    {
+        $validated = $request->validate([
+            'order_ref' => 'required|string', 
+        ]);
+
+        $order = EcomOrder::where('order_number', $validated['order_ref'])->first();
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        $order->status = 'paid';
+        $order->save();
+
+        return response()->json(['success' => true, 'message' => 'Order marked as paid']);
+    }
     
 }

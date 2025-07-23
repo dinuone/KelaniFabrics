@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\SubCategoryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
+
 
 Route::get('/products',[ProductController::class,'ProductList']);
 Route::get('/product/{id}', [ProductController::class, 'ProductDetails']);
@@ -18,3 +20,5 @@ Route::get('/categories/{id}/subcategories', [SubCategoryController::class, 'Sub
 Route::get('/subcategories/{id}/products', [ProductController::class, 'SubCategoryProducts']);
 
 Route::post('/place-order', [OrderController::class, 'placeOrder']);
+Route::post('/order/mark-paid', [OrderController::class, 'markOrderAsPaid']);
+Route::post('/create-payment', [PaymentController::class, 'createPaymentIntent']);
