@@ -9,9 +9,13 @@ class StoreSub_categoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function attributes(): array
     {
-        return true;
+        return [
+            'catName' => 'category name',
+            'subCatName' => 'Sub category name',
+      
+        ];
     }
 
     /**
@@ -25,7 +29,7 @@ class StoreSub_categoryRequest extends FormRequest
         return [
             'catName'=>'required|string',
             'subCatName' => 'required|string',
-            'subCatStatus' => 'required|string',
+       
         ];
     }
 }

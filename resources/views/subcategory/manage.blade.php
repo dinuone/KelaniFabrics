@@ -22,17 +22,18 @@
                         <label for="type" class="form-label">Category Name</label>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-select" aria-label="Default select example" name="catName" id="catName">
-                            <option selected>Select category</option>
+                       <select class="form-control @error('catName') is-invalid @enderror"  name="catName" id="catName">
+                            <option value="" disabled {{ old('catName', $sub_category->cat_id ?? '') == '' ? 'selected' : '' }}>Select category</option>
                             @foreach ($category as $cat)
-                               <option value="{{ $cat->id }}"
-                                {{ (isset($sub_category) && $sub_category->cat_id == $cat->id) ? 'selected' : '' }}>
-                                {{ $cat->cat_name }}
-                            </option>
+                                <option value="{{ $cat->id }}"
+                                    {{ old('catName', $sub_category->cat_id ?? '') == $cat->id ? 'selected' : '' }}>
+                                    {{ $cat->cat_name }}
+                                </option>
                             @endforeach
                         </select>
-                        <span class="test-danger">
-                            @error('type')
+
+                        <span class="text-danger">
+                            @error('catName')
                                 {{ $message }}
                             @enderror
                         </span>
@@ -43,7 +44,7 @@
                     <div class="col-md-3">
                         <input type="text" class="form-control @error('subCatName') is-invalid @enderror" id="subCatName"
                             name="subCatName" value="{{ old('subCatName', $sub_category->sub_cat_name ?? '') }}">
-                        <span class="test-danger">
+                        <span class="text-danger">
                             @error('subCatName')
                                 {{ $message }}
                             @enderror

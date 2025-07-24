@@ -26,7 +26,7 @@
 
                         <input type="text" class="form-control @error('catName') is-invalid @enderror" id="catName"
                             name="catName" value="{{ old('catName', $category->cat_name ?? '') }}">
-                        <span class="test-danger">
+                        <span class="text-danger">
                             @error('catName')
                                 {{ $message }}
                             @enderror

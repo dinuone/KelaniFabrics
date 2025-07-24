@@ -20,16 +20,6 @@
     <div class="form-container">
         <h3 class="mb-4">{{ isset($order) ? 'Edit Order' : 'Create New Order' }}</h3>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form 
             action="{{ isset($order) ? route('order.update', $order->id) : route('order.store') }}" 
             method="POST"

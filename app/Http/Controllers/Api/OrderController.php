@@ -73,7 +73,12 @@ class OrderController extends Controller
                     ->first();
 
                 if (!$stock) {
-                    throw new \Exception("Stock not found for the selected product, color, and size.");
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Stock not found for the selected product, color, and size.",
+                        'stock_not_found' => true,
+                    ], 200);
+                  
                 }
 
                if ($stock->receive_qty < $item['quantity']) {

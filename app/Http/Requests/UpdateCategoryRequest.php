@@ -9,9 +9,12 @@ class UpdateCategoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function attributes(): array
     {
-        return true;
+        return [
+            'catName' => 'category name',
+            'catStatus' => 'category status',
+        ];
     }
 
     /**
@@ -23,7 +26,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'catName' => 'required|string',
-            'catType' => 'required|string',
+            'catStatus' => 'required|string',
         ];
     }
 }

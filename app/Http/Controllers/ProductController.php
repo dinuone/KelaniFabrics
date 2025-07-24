@@ -67,19 +67,26 @@ class ProductController extends Controller
     //     );
     //     return redirect()->route('product.inddex')->with($type,$message);
     // }
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
+    
+    
+    
         $validated = $request->validate([
             'productName'       => 'required|string|max:255',
             'productPrice'      => 'required|numeric|min:0',
-            'description'       => 'required|string',
             'category_id'       => 'required|exists:categories,id',
             'sub_category_id'   => 'required|exists:sub_categories,id',
             'color'             => 'required|integer|exists:colors,id',
-            'size'              => 'required|array',
-            'size.*'            => 'integer|exists:sizes,id',
-            'productImage'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'size'              => 'required|array|min:1',
+            'productImage'      => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'size.required'     => 'Please select at least one size.',
+            'size.min'          => 'Please select at least one size.',
         ]);
+
+
+
 
     
         $existingProduct = Product::withTrashed()
@@ -171,17 +178,19 @@ class ProductController extends Controller
     // }
 
 
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'productName' => 'required|string|max:255',
-            'productPrice' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
-            'color' => 'required|integer|exists:colors,id',
-            'size' => 'required|array',
-            'productImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+          $validated = $request->validate([
+            'productName'       => 'required|string|max:255',
+            'productPrice'      => 'required|numeric|min:0',
+            'category_id'       => 'required|exists:categories,id',
+            'sub_category_id'   => 'required|exists:sub_categories,id',
+            'color'             => 'required|integer|exists:colors,id',
+            'size'              => 'required|array|min:1',
+            'productImage'      => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'size.required'     => 'Please select at least one size.',
+            'size.min'          => 'Please select at least one size.',
         ]);
 
     

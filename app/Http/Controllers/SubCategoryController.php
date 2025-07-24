@@ -52,6 +52,7 @@ class SubCategoryController extends Controller
      */
     public function store(StoreSub_categoryRequest $request)
     {
+       
         list($type,$message)=$this->subcategoryService->storeSubCategory(
             catId: $request['catName'],
             //catId:$request['catId'],

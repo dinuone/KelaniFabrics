@@ -78,15 +78,6 @@
     <div class="product-form">
         <h2 class="form-header">{{ isset($product) ? 'Edit Product' : 'Create New Product' }}</h2>
 
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
 
         <form action="{{ isset($product) ? route('product.update', $product->id) : route('product.store') }}" method="POST" enctype="multipart/form-data" id="productForm">
             @csrf
@@ -105,7 +96,7 @@
                         <label for="productName" class="form-label required-field">Product Name</label>
                         <input type="text" class="form-control @error('productName') is-invalid @enderror"
                                id="productName" name="productName"
-                               value="{{ old('productName', $product->product_name ?? '') }}" required>
+                               value="{{ old('productName', $product->product_name ?? '') }}" >
                         @error('productName')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -125,7 +116,7 @@
                         <label for="productPrice" class="form-label required-field">Product Price</label>
                         <input type="number" step="0.01" class="form-control @error('productPrice') is-invalid @enderror"
                                id="productPrice" name="productPrice" min="0.01"
-                               value="{{ old('productPrice', $product->price ?? '') }}" required>
+                               value="{{ old('productPrice', $product->price ?? '') }}" >
                         @error('productPrice')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -134,7 +125,7 @@
                   
 
                     <div class="mb-3">
-                        <label for="description"  class="form-label required-field">Description</label>
+                        <label for="description"  class="form-label">Description</label>
                         <textarea class="form-control @error('description') is-invalid @enderror"
                                   id="description" name="description" rows="3"
                                   maxlength="1000">{{ old('description', $product->description ?? '') }}</textarea>
@@ -152,7 +143,7 @@
                         <input type="file" class="form-control @error('productImage') is-invalid @enderror"
                                id="productImage" name="productImage" accept="image/*">
                         @error('productImage')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <small class="text-muted">Max 2MB, JPG/PNG/GIF/WEBP</small>
 
@@ -175,7 +166,7 @@
                     <div class="mb-3">
                         <label for="category_id" class="form-label required-field">Category</label>
                         <select name="category_id" id="category_id"
-                                class="form-control @error('category_id') is-invalid @enderror" required>
+                                class="form-control @error('category_id') is-invalid @enderror" >
                             <option value="">Select Category</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}"
@@ -266,7 +257,7 @@
                             @endforeach
                         </div>
                         @error('size')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -362,49 +353,6 @@
 
 
 
-    // Form validation
-    document.getElementById('productForm').addEventListener('submit', function(e) {
-        let isValid = true;
-
-        // Validate required fields
-        const requiredFields = this.querySelectorAll('[required]');
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.classList.add('is-invalid');
-                isValid = false;
-            }
-        });
-
-        // Validate at least one size is selected
-        const sizeCheckboxes = this.querySelectorAll('input[name="size[]"]:checked');
-        if (sizeCheckboxes.length === 0) {
-            const sizeError = document.createElement('div');
-            sizeError.className = 'invalid-feedback d-block';
-            sizeError.textContent = 'Please select at least one size';
-            document.querySelector('.size-selection-container').appendChild(sizeError);
-            isValid = false;
-        }
-
-        // Validate color is selected
-        if (!document.getElementById('colorInput').value) {
-            const colorError = document.createElement('div');
-            colorError.className = 'invalid-feedback d-block';
-            colorError.textContent = 'Please select a color';
-            document.querySelector('.color-selection-container').appendChild(colorError);
-            isValid = false;
-        }
-
-        if (!isValid) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
-
-    // Clear validation when user interacts
-    document.querySelectorAll('input, select, textarea').forEach(element => {
-        element.addEventListener('input', function() {
-            this.classList.remove('is-invalid');
-        });
-    });
+  
 </script>
 @endsection
