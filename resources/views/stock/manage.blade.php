@@ -91,11 +91,13 @@
                 <div class="mb-3">
                     <label for="color_id" class="form-label">Color</label>
                     <select name="color_id" id="color_id" class="form-control" required>
-                        @foreach ($colors as $color)
-                            <option value="{{ $color->id }}" {{ isset($stock) && $stock->color_id == $color->id ? 'selected' : '' }}>
-                                {{ $color->color_name }}
-                            </option>
-                        @endforeach
+                         @foreach ($colors as $color)
+                        <option 
+                            value="{{ $color->id }}" 
+                            {{ old('color_id', $stock->color_id) == $color->id ? 'selected' : '' }}>
+                            {{ $color->color_name }}
+                        </option>
+                    @endforeach
                     </select>
                 </div>
 
@@ -103,8 +105,10 @@
                 <div class="mb-3">
                     <label for="size_id" class="form-label">Size</label>
                     <select name="size_id" id="size_id" class="form-control" required>
-                        @foreach ($sizes as $size)
-                            <option value="{{ $size->id }}" {{ isset($stock) && $stock->size_id == $size->id ? 'selected' : '' }}>
+                       @foreach ($sizes as $size)
+                            <option 
+                                value="{{ $size->id }}" 
+                                {{ old('size_id', $stock->size_id) == $size->id ? 'selected' : '' }}>
                                 {{ $size->size }}
                             </option>
                         @endforeach
@@ -151,21 +155,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const suggestionBox = document.getElementById('productSuggestions');
     const productIdInput = document.getElementById('product_id');
     const priceInput = document.getElementById('price');
+    const colorSelect = document.getElementById('color_id');
+    const sizeSelect = document.getElementById('size_id');
 
     let timeout = null;
 
     searchInput.addEventListener('input', function () {
         const query = this.value.trim();
-
         clearTimeout(timeout);
 
         if (query.length < 2) {
             suggestionBox.innerHTML = '';
             return;
         }
-
-
-
 
         timeout = setTimeout(() => {
             fetch(`{{ route('products.search') }}?query=${encodeURIComponent(query)}`)
@@ -177,14 +179,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         const item = document.createElement('li');
                         item.classList.add('list-group-item', 'list-group-item-action');
                         item.textContent = `${product.product_name} (${product.product_ref})`;
-                        item.dataset.id = product.id;
-                        item.dataset.price = product.price;
+                        
+                        // Store full product JSON in dataset
+                        item.dataset.product = JSON.stringify(product);
 
                         item.addEventListener('click', () => {
                             searchInput.value = `${product.product_name} (${product.product_ref})`;
                             productIdInput.value = product.id;
                             priceInput.value = product.price;
                             suggestionBox.innerHTML = '';
+
+                            populateColors(product.colors);
+                            populateSizes(product.sizes);
                         });
 
                         suggestionBox.appendChild(item);
@@ -197,16 +203,36 @@ document.addEventListener('DOMContentLoaded', function () {
                         suggestionBox.appendChild(noResult);
                     }
                 });
-        }, 300); // debounce
+        }, 300);
     });
 
-    // Hide suggestions when clicking outside
     document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !suggestionBox.contains(e.target)) {
             suggestionBox.innerHTML = '';
         }
     });
+
+    function populateColors(colors) {
+        colorSelect.innerHTML = '';
+        colors.forEach(color => {
+            const option = document.createElement('option');
+            option.value = color.id;
+            option.textContent = color.color_name;
+            colorSelect.appendChild(option);
+        });
+    }
+
+    function populateSizes(sizes) {
+        sizeSelect.innerHTML = '';
+        sizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size.id;
+            option.textContent = size.size;
+            sizeSelect.appendChild(option);
+        });
+    }
 });
 </script>
+
 
 @endsection

@@ -12,6 +12,7 @@ use App\Models\Stock;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Exports\OrdersExport;
+use App\Exports\EcomOrderExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Services\WhatsAppService;
@@ -44,7 +45,7 @@ class OrderController extends Controller
     {
         return Excel::download(new OrdersExport, 'orders.xlsx');
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -92,8 +93,8 @@ class OrderController extends Controller
             $stock->save();
 
             $orderRef = $this->generateOrderRef();
-          
-          
+
+
 
             $order = Order::create([
                 'customer_id' => $validated['customer_id'],
@@ -140,7 +141,7 @@ class OrderController extends Controller
 
     public static function generateOrderRef()
     {
-        
+
         $latest = DB::table('orders')
             ->select('order_ref')
             ->where('order_ref', 'LIKE', 'ORD-%')
@@ -251,7 +252,7 @@ class OrderController extends Controller
         }
     }
 
- 
+
 
     /**
      * Display the specified resource.
@@ -275,7 +276,7 @@ class OrderController extends Controller
         return view('order.manage', compact('order', 'stocks', 'customers'));
     }
 
- 
+
 
     /**
      * Remove the specified resource from storage.
@@ -289,7 +290,7 @@ class OrderController extends Controller
     }
 
 
-    
+
     public function exportPdf(Request $request)
     {
         $orders = Order::with(['stock.product', 'stock.color', 'stock.size', 'payment'])
@@ -302,5 +303,59 @@ class OrderController extends Controller
         return $pdf->download('orders.pdf');
     }
 
-    
+
+    public function Ecomindex()
+    {
+        $orders = EcomOrder::latest()->get(); // eager load customer if needed
+
+        return view('ecom.index', compact('orders'));
+    }
+
+    public function Ecomdestroy($id)
+    {
+        $order = EcomOrder::findOrFail($id);
+        $order->delete();
+
+        return redirect()->route('ecom.index')->with('success', 'Order deleted successfully.');
+    }
+
+    public function showItems(Ecomorder $order)
+    {
+        $items = EcomorderItem::where('order_id', $order->id)
+            ->with(['product', 'color', 'size'])
+            ->get();
+        return view('ecom.items', compact('items'));
+    }
+
+    public function exportExcelEcom()
+    {
+        return Excel::download(new EcomOrderExport, 'ecom-orders.xlsx');
+    }
+
+    public function exportPdfEcom()
+    {
+        $orders = Ecomorder::with('items')->get();
+        $pdf = Pdf::loadView('ecom.pdf', compact('orders'))->setPaper('a4', 'landscape');;
+        return $pdf->download('ecom-orders.pdf');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required'
+        ]);
+
+        $order = EcomOrder::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+
+        $payment = Payment::where('order_id', $id)->first();
+        $payment->status = $request->status;
+        $payment->save();
+
+
+
+        return redirect()->back()->with('success', 'Order status updated successfully.');
+    }
+
 }

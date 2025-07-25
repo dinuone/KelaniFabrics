@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Twilio\Rest\Client;
 use Twilio\Http\CurlClient;
-use Twilio\Http\GuzzleClient; 
+use Twilio\Http\GuzzleClient;
 use GuzzleHttp\Client as Guzzle;
 
 class WhatsAppService
@@ -14,7 +14,7 @@ class WhatsAppService
     public function __construct()
     {
         // Use Guzzle and disable SSL verification (for local only!)
-        $guzzle = new Guzzle(['verify' => false]); 
+        $guzzle = new Guzzle(['verify' => false]); //Guzzle is a PHP HTTP client used to make HTTP requests
         $httpClient = new GuzzleClient($guzzle);
 
         $this->client = new Client(

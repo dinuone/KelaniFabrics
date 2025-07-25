@@ -16,4 +16,17 @@ class Customer extends Model
         'updated_at',
         'deleted_at'
     ];
+
+     protected $fillable = [
+        'id',
+        'cust_fname',
+        'cust_lname',
+        'contact_number',
+        'email',
+        'address',
+        'gender',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 }

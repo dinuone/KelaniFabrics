@@ -98,9 +98,7 @@
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-@if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
+
 
 <div class="container py-5">
     <div class="employee-form">
@@ -110,15 +108,7 @@
             @csrf
             @method((isset($employee)) ? 'PATCH' : 'POST')
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+
 
             <div class="row">
                 <div class="col-md-6">
@@ -169,11 +159,11 @@
                     <div class="d-flex flex-wrap gap-3">
                         @foreach($roles as $role)
                             <div class="form-check">
-                                <input 
-                                    class="form-check-input" 
-                                    type="checkbox" 
-                                    name="roles[]" 
-                                    id="role-{{ $role->id }}" 
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="roles[]"
+                                    id="role-{{ $role->id }}"
                                     value="{{ $role->name }}"
                                     {{ (isset($employee) && $employee->user && $employee->user->hasRole($role->name)) ? 'checked' : '' }}
                                 >

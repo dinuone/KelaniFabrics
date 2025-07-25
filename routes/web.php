@@ -82,6 +82,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('order/{order}', [OrderController::class, 'update'])->name('order.update');
     Route::delete('/order/delete/{order}', [OrderController::class,'destroy'])->name('order.destroy');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');
+
+    Route::get('/ecom-orders', [OrderController::class, 'Ecomindex'])->name('ecom-orders.index');
+    Route::delete('/ecom-orders/{id}', [OrderController::class, 'Ecomdestroy'])->name('ecom-orders.destroy');
+    Route::get('/ecom-orders/{order}/items', [OrderController::class, 'showItems'])->name('ecom-orders.items');
+    Route::get('/ecom-order/export', [OrderController::class, 'exportExcelEcom'])->name('ecom-orders.export');
+    Route::get('/ecom-order/export/pdf', [OrderController::class, 'exportPdfEcom'])->name('ecom-orders.export.pdf');
+    Route::put('/ecom-orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('ecom-orders.updateStatus');
     //payment
 
     Route::get('/payment',[PaymentController::class,'index'])->name('payment.index');

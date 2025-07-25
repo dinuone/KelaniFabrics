@@ -215,13 +215,16 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="page-header">
                     <h2 class="fw-bold text-white m-0">Sub Category Management</h2>
                 </div>
             </div>
-            
+
             <div class="col-12 mb-4">
                 <div class="row align-items-center">
                     <!-- Left: Add New Sub Category -->

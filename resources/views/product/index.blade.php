@@ -222,6 +222,9 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="page-header">
@@ -250,7 +253,7 @@
                         <a href="{{ route('product.export') }}" class="btn btn-modern btn-outline-primary">
                             <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
                         </a>
-                        
+
                         <a href="{{ route('product.exportPdf') }}" class="btn btn-modern btn-outline-danger ms-2">
                             <i class="bi bi-filetype-pdf me-2"></i>Export to PDF
                         </a>
@@ -266,7 +269,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Image</th> 
+                                    <th>Image</th>
                                     <th>Product Ref</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
@@ -293,7 +296,7 @@
                                         <td><span class="price-tag">Rs. {{ number_format($product->price, 2) }}</span></td>
                                         <td>
                                             @foreach ($product->colors as $color)
-                                                <span style="background-color: {{ strtolower($color->color_name) }}; 
+                                                <span style="background-color: {{ strtolower($color->color_name) }};
                                                             display:inline-block; width: 20px; height: 20px; border-radius: 50%; margin-right: 5px;"
                                                     title="{{ $color->color_name }}">
                                                 </span>

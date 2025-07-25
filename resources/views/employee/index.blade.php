@@ -218,6 +218,9 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="page-header">

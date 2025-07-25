@@ -134,7 +134,7 @@
         justify-content: flex-end;
     }
 
-    
+
     .action-btn {
         width: 36px;
         height: 36px;
@@ -172,6 +172,9 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="page-header">
@@ -233,19 +236,19 @@
                                     <td>{{ $order->order_ref }}</td>
                                     <td>{{ $order->stock?->product?->product_name ?? '-' }}</td>
                                     <td>
-                                       <span style="background-color: {{ strtolower($order->stock?->color?->color_name) }}; 
+                                       <span style="background-color: {{ strtolower($order->stock?->color?->color_name) }};
                                                             display:inline-block; width: 20px; height: 20px; border-radius: 50%; margin-right: 5px;"
                                                     title="{{ $order->stock?->color?->color_name }}">
                                         </span>
                                     </td>
-                                   
+
                                     <td>{{ $order->stock?->size?->size ?? '-' }}</td>
                                     <td><span class="payment-date">{{ $order->payment?->created_at ?? '-' }}</span></td>
                                     <td><span class="payment-amount">Rs. {{ number_format($order->payment?->amount ?? 0, 2) }}</span></td>
                                     <td><span class="payment-method-badge">{{ $order->order_type?? '-' }}</span></td>
                                       <td><span class="orer-status-badge">{{ $order->payment->status?? '-' }}</span></td>
                                     <td><span class="orer-status-badge">{{ $order->status?? '-' }}</span></td>
-                                  
+
                                      <td>
                                             <div class="table-actions">
                                                 <a href="javascript:void(0)" class="action-btn action-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="appendId('{{ $order->id }}')">

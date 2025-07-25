@@ -9,23 +9,25 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Color;
 use App\Models\Size;
+use App\Models\Stock;
 
 class ProductController extends Controller
 {
     public function ProductList()
     {
-        $products = Product::with(['category', 'subCategory', 'colors'])
-            ->select('id', 'product_name', 'product_ref', 'price', 'image')
+        $stock = Stock::with(['product', 'color', 'size'])
+            ->select('id', 'price', 'availability')
+            ->where('availability','=','In Stock')
             ->get();
 
-        $products->transform(function ($product) {
+        $stock->product->transform(function ($product) {
             $product->image = $product->image ? asset('storage/' . $product->image) : null;
             return $product;
         });
 
         return response()->json([
             'success' => true,
-            'data' => $products,
+            'data' => $stock,
         ]);
     }
 
@@ -76,21 +78,28 @@ class ProductController extends Controller
         ]);
     }
 
-     public function SubCategoryProducts($id)
+    public function SubCategoryProducts($id)
     {
-        $products = Product::with(['category', 'colors', 'sizes'])
+        $products = Product::with(['category', 'availableStocks.color', 'availableStocks.size'])
             ->where('sub_cat_id', $id)
             ->select('id', 'product_name', 'product_ref', 'price', 'image')
             ->get();
 
-         $products->transform(function ($product) {
+        $filteredProducts = $products->filter(function ($product) {
+            return $product->availableStocks->isNotEmpty(); // Only products with stock
+        })->map(function ($product) {
             $product->image = $product->image ? asset('storage/' . $product->image) : null;
+
+            // Replace product colors/sizes with those from stock entries
+            $product->colors = $product->availableStocks->pluck('color')->unique('id')->values();
+            $product->sizes = $product->availableStocks->pluck('size')->unique('id')->values();
+
             return $product;
-        });
+        })->values();
 
         return response()->json([
             'success' => true,
-            'data' => $products
+            'data' => $filteredProducts
         ]);
     }
 }

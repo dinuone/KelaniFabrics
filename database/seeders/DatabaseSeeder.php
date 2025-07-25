@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
-        //     'password' => bcrypt('123456'), 
+        //     'password' => bcrypt('123456'),
         // ]);
 
         $this->call(SizeSeeder::class);
@@ -28,6 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ColorSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(SubCategorySeeder::class);
-        $this->call(ProductSeeder::class);
+        // $this->call(ProductSeeder::class);
     }
 }

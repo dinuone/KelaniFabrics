@@ -66,15 +66,18 @@ class CustomerService
         string $custLName,
         string $address,
         string $email,
-        string $gender
+        string $gender,
+        string $contactNumber
     ): array {
         try {
+       
             $customer->update([
                 'cust_fname' => $custFName,
                 'cust_lname' => $custLName,
                 'address' => $address,
                 'email' => $email,
                 'gender' => $gender,
+                'contact_number' => $contactNumber,
             ]);
 
             return ['success', 'Customer updated successfully'];

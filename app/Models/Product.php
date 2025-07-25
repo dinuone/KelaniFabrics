@@ -78,4 +78,9 @@ class Product extends Model
     {
         return $this->hasMany(Stock::class);
     }
+
+    public function availableStocks()
+    {
+        return $this->hasMany(Stock::class)->where('availability', 'In Stock');
+    }
 }

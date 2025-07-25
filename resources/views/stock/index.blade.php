@@ -230,7 +230,7 @@
         background-color: rgba(243, 120, 4, 0.1);
         color: #cc9f0a;
     }
-  
+
 
 
     .availability-out-of-stock {
@@ -244,6 +244,9 @@
 
 
     <div class="container">
+        @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="page-header">
