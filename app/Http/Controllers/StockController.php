@@ -60,11 +60,9 @@ class StockController extends Controller
      */
     public function create()
     {
-     
-        
-
-
-        return view('stock.manage');
+        $colors = collect(); // empty collection
+        $sizes = collect();  // empty collection
+         return view('stock.manage', compact('colors', 'sizes'));
     }
     /**
      * Store a newly created resource in storage.
@@ -114,13 +112,11 @@ class StockController extends Controller
      */
     public function edit(Stock $stock)
     {
-        // Load related data for dropdowns
-        $products = Product::all();
-        $colors = Color::all();
-        $sizes = Size::all();
+        $product = $stock->product;
+        $colors = $product->colors ?? collect();
+        $sizes = $product->sizes ?? collect();
 
-        // Return the edit view with data
-        return view('stock.manage', compact('stock', 'products', 'colors', 'sizes'));
+        return view('stock.manage', compact('stock', 'colors', 'sizes'));
     }
 
     /**

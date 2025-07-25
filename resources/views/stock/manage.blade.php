@@ -91,11 +91,13 @@
                 <div class="mb-3">
                     <label for="color_id" class="form-label">Color</label>
                     <select name="color_id" id="color_id" class="form-control" required>
-                        {{-- @foreach ($colors as $color)
-                            <option value="{{ $color->id }}" {{ isset($stock) && $stock->color_id == $color->id ? 'selected' : '' }}>
-                                {{ $color->color_name }}
-                            </option>
-                        @endforeach --}}
+                         @foreach ($colors as $color)
+                        <option 
+                            value="{{ $color->id }}" 
+                            {{ old('color_id', $stock->color_id) == $color->id ? 'selected' : '' }}>
+                            {{ $color->color_name }}
+                        </option>
+                    @endforeach
                     </select>
                 </div>
 
@@ -103,11 +105,13 @@
                 <div class="mb-3">
                     <label for="size_id" class="form-label">Size</label>
                     <select name="size_id" id="size_id" class="form-control" required>
-                        {{-- @foreach ($sizes as $size)
-                            <option value="{{ $size->id }}" {{ isset($stock) && $stock->size_id == $size->id ? 'selected' : '' }}>
+                       @foreach ($sizes as $size)
+                            <option 
+                                value="{{ $size->id }}" 
+                                {{ old('size_id', $stock->size_id) == $size->id ? 'selected' : '' }}>
                                 {{ $size->size }}
                             </option>
-                        @endforeach --}}
+                        @endforeach
                     </select>
                 </div>
 
