@@ -243,7 +243,7 @@
 
 
                                      <td>
-                                     
+
                                             <div class="table-actions">
                                                 <a href="javascript:void(0)" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="showOrderItems('{{ $order->id }}')">
                                                     <i class="bi bi-eye"></i>
@@ -251,13 +251,13 @@
                                                 <a href="javascript:void(0)" class="action-btn action-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="appendId('{{ $order->id }}')">
                                                     <i class="bi bi-trash3"></i>
                                                 </a>
-                                              
-                                              <button 
-                                                    @if($order->status === 'paid') disabled @endif 
-                                                    class="btn btn-outline-success btn-sm rounded-circle" 
+
+                                              <button
+                                                    @if($order->status === 'paid') disabled @endif
+                                                    class="btn btn-outline-success btn-sm rounded-circle"
                                                     title="Mark as Paid"
                                                     onclick="setUpdateStatusForm('{{ $order->id }}', '{{ $order->status }}')"
-                                                    data-bs-toggle="modal" 
+                                                    data-bs-toggle="modal"
                                                     data-bs-target="#updateStatusModal"
                                                 >
                                                     <i class="bi bi-cash-coin"></i>
@@ -302,9 +302,11 @@
                 <label for="status" class="form-label">Select New Status</label>
                 <select name="status" id="status" class="form-select" required>
                 <option value="">-- Select Status --</option>
+                @if(count($orders) > 0)
                 <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                 <option value="paid" {{ $order->status == 'paid' ? 'selected' : '' }}>Paid</option>
                 <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                @endif
                 </select>
             </div>
             </div>
@@ -332,7 +334,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

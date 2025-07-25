@@ -45,7 +45,7 @@ class OrderController extends Controller
     {
         return Excel::download(new OrdersExport, 'orders.xlsx');
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -93,8 +93,8 @@ class OrderController extends Controller
             $stock->save();
 
             $orderRef = $this->generateOrderRef();
-          
-          
+
+
 
             $order = Order::create([
                 'customer_id' => $validated['customer_id'],
@@ -141,7 +141,7 @@ class OrderController extends Controller
 
     public static function generateOrderRef()
     {
-        
+
         $latest = DB::table('orders')
             ->select('order_ref')
             ->where('order_ref', 'LIKE', 'ORD-%')
@@ -252,7 +252,7 @@ class OrderController extends Controller
         }
     }
 
- 
+
 
     /**
      * Display the specified resource.
@@ -276,7 +276,7 @@ class OrderController extends Controller
         return view('order.manage', compact('order', 'stocks', 'customers'));
     }
 
- 
+
 
     /**
      * Remove the specified resource from storage.
@@ -290,7 +290,7 @@ class OrderController extends Controller
     }
 
 
-    
+
     public function exportPdf(Request $request)
     {
         $orders = Order::with(['stock.product', 'stock.color', 'stock.size', 'payment'])
@@ -307,6 +307,7 @@ class OrderController extends Controller
     public function Ecomindex()
     {
         $orders = EcomOrder::latest()->get(); // eager load customer if needed
+
         return view('ecom.index', compact('orders'));
     }
 
@@ -350,5 +351,5 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
-    
+
 }
