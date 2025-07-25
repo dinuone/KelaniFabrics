@@ -349,6 +349,12 @@ class OrderController extends Controller
         $order->status = $request->status;
         $order->save();
 
+        $payment = Payment::where('order_id', $id)->first();
+        $payment->status = $request->status;
+        $payment->save();
+
+
+
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
 
