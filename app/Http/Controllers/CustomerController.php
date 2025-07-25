@@ -79,6 +79,7 @@ class CustomerController extends Controller
             customer:$customer,
             custFName: $request['custFName'],
             custLName: $request['custLName'],
+            contactNumber: $request['contactNumber'],
             email:$request['email'],
             address:$request['address'],
             gender:$request['gender'],
