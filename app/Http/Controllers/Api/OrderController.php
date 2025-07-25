@@ -78,7 +78,7 @@ class OrderController extends Controller
                 'total_amount' => $validated['total_amount'],
             ]);
 
-           
+
 
             foreach ($validated['items'] as $item) {
                 $stock = Stock::where('product_id', $item['product_id'])
@@ -107,6 +107,12 @@ class OrderController extends Controller
                 $stock->receive_qty -= $item['quantity'];
                 $stock->save();
 
+                if($stock->receive_qty == 0)
+                {
+                    $stock->availability = 'Out of Stock';
+                    $stock->save();
+                }
+
                 // Create order item record
                 EcomOrderItem::create([
                     'order_id' => $order->id,
@@ -118,11 +124,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            Payment::create([
-                'order_id' => $order->id,
-                'amount' => $amount,
-                'status' => 'pending',
-            ]);
 
             DB::commit();
 
