@@ -10,6 +10,7 @@ use App\Models\Stock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Services\WhatsAppService;
+use App\Models\Payment;
 
 class OrderController extends Controller
 {
@@ -77,6 +78,8 @@ class OrderController extends Controller
                 'total_amount' => $validated['total_amount'],
             ]);
 
+           
+
             foreach ($validated['items'] as $item) {
                 $stock = Stock::where('product_id', $item['product_id'])
                     ->where('color_id', $item['color_id'])
@@ -114,6 +117,12 @@ class OrderController extends Controller
                     'price' => $stock->price,  // Assuming price is stored in stock table
                 ]);
             }
+
+            Payment::create([
+                'order_id' => $order->id,
+                'amount' => $amount,
+                'status' => 'pending',
+            ]);
 
             DB::commit();
 

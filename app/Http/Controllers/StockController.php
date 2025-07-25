@@ -61,11 +61,10 @@ class StockController extends Controller
     public function create()
     {
      
-        $colors = Color::all();
-        $sizes = Size::all();
+        
 
 
-        return view('stock.manage', compact('colors', 'sizes'));
+        return view('stock.manage');
     }
     /**
      * Store a newly created resource in storage.

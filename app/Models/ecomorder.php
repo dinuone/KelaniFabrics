@@ -24,8 +24,8 @@ class ecomorder extends Model
         'total_amount',
     ];
 
-    public function items(): HasMany
+   public function items()
     {
-        return $this->hasMany(EcomOrderItem::class, 'order_id');
+        return $this->hasMany(\App\Models\EcomorderItem::class, 'order_id');
     }
 }

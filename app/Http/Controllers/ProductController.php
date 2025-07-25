@@ -228,17 +228,18 @@ class ProductController extends Controller
 
 
 
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
 
-    //     $products = Product::where('product_name', 'like', "%{$query}%")
-    //         ->orWhere('product_ref', 'like', "%{$query}%")
-    //         ->limit(10)
-    //         ->get(['id', 'product_name', 'product_ref', 'price']);
+        $products = Product::where('product_name', 'like', "%{$query}%")
+            ->orWhere('product_ref', 'like', "%{$query}%")
+            ->limit(10)
+            ->with('colors','sizes')
+            ->get(['id', 'product_name', 'product_ref', 'price']);
 
-    //     return response()->json($products);
-    // }
+        return response()->json($products);
+    }
 
 
     public function destroy(Product $product):RedirectResponse

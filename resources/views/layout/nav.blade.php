@@ -235,6 +235,12 @@
                                 <i class="fas fa-shopping-cart fa-lg me-3"></i> Order
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white hover:bg-blue-700 p-2 rounded d-flex align-items-center {{ request()->is('ecom-orders*') ? 'bg-blue-700' : '' }}" href="/ecom-orders">
+                                <i class="fas fa-shopping-cart fa-lg me-3"></i> E-Commerece Order
+                            </a>
+                        </li>
                         @endcan
 
                         @can('manage payments')
