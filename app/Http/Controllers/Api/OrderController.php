@@ -9,12 +9,19 @@ use App\Models\EcomOrderItem;
 use App\Models\Stock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Services\WhatsAppService;
 
 class OrderController extends Controller
 {
+
+    protected WhatsAppService $whatsapp;
+
+    public function __construct(WhatsAppService $whatsapp) {
+        $this->whatsapp =  $whatsapp;
+    }
     public function placeOrder(Request $request)
     {
-       
+
         $validated = $request->validate([
             'customer_email' => 'required|email',
             'customer_phone' => 'required|string',
@@ -34,6 +41,9 @@ class OrderController extends Controller
 
         DB::beginTransaction();
 
+        \Log::info("validate");
+        \Log::info($validated);
+
         try {
 
 
@@ -51,6 +61,7 @@ class OrderController extends Controller
             }
 
             $orderNumber = 'ORD' . $date . str_pad($nextIncrement, 4, '0', STR_PAD_LEFT);
+
 
             $order = EcomOrder::create([
                 'order_number' => $orderNumber,
@@ -78,7 +89,7 @@ class OrderController extends Controller
                         'message' => "Stock not found for the selected product, color, and size.",
                         'stock_not_found' => true,
                     ], 200);
-                  
+
                 }
 
                if ($stock->receive_qty < $item['quantity']) {
@@ -106,6 +117,12 @@ class OrderController extends Controller
 
             DB::commit();
 
+            $formattedPhone = '+94' . ltrim($validated['customer_phone'], '0');
+
+            $message = "Hi {$validated['customer_name']}, your order #{$orderNumber} has been placed successfully. Total: Rs. {$order->total_amount}. Thank you!";
+
+            $this->whatsapp->sendMessage($formattedPhone,$message);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Order placed successfully',
@@ -126,7 +143,7 @@ class OrderController extends Controller
     public function markOrderAsPaid(Request $request)
     {
         $validated = $request->validate([
-            'order_ref' => 'required|string', 
+            'order_ref' => 'required|string',
         ]);
 
         $order = EcomOrder::where('order_number', $validated['order_ref'])->first();
@@ -140,5 +157,5 @@ class OrderController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Order marked as paid']);
     }
-    
+
 }

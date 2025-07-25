@@ -69,9 +69,9 @@ class ProductController extends Controller
     // }
     public function store(Request $request)
     {
-    
-    
-    
+
+
+
         $validated = $request->validate([
             'productName'       => 'required|string|max:255',
             'productPrice'      => 'required|numeric|min:0',
@@ -88,7 +88,7 @@ class ProductController extends Controller
 
 
 
-    
+
         $existingProduct = Product::withTrashed()
             ->where('product_name', $validated['productName'])
             ->where('cat_id', $validated['category_id'])
@@ -97,7 +97,7 @@ class ProductController extends Controller
 
         if ($existingProduct) {
             if ($existingProduct->trashed()) {
-         
+
                 $existingProduct->restore();
                 $existingProduct->update([
                     'price'       => $validated['productPrice'],
@@ -106,7 +106,7 @@ class ProductController extends Controller
                 ]);
             }
 
-    
+
             $existingProduct->colors()->syncWithoutDetaching([$validated['color']]);
             $existingProduct->sizes()->syncWithoutDetaching($validated['size']);
 
@@ -129,7 +129,7 @@ class ProductController extends Controller
 
         $product = Product::create($data);
 
-       
+
         $product->sizes()->attach($validated['size']);
         $product->colors()->attach($validated['color']);
 
@@ -154,10 +154,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+
         $colors = Color::all();
         $categories = Category::all();
         $subcategories = SubCategory::where('cat_id', $product->cat_id)->get();
         $product->load(['colors', 'sizes']);
+
        return view('product.manage', compact('product', 'colors', 'categories', 'subcategories'));
     }
 
@@ -193,7 +195,7 @@ class ProductController extends Controller
             'size.min'          => 'Please select at least one size.',
         ]);
 
-    
+
         $data = [
             'product_name' => $validated['productName'],
             'description' => $validated['description'] ?? null,
@@ -226,23 +228,23 @@ class ProductController extends Controller
 
 
 
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
+    // public function search(Request $request)
+    // {
+    //     $query = $request->input('query');
 
-        $products = Product::where('product_name', 'like', "%{$query}%")
-            ->orWhere('product_ref', 'like', "%{$query}%")
-            ->limit(10)
-            ->get(['id', 'product_name', 'product_ref', 'price']);
+    //     $products = Product::where('product_name', 'like', "%{$query}%")
+    //         ->orWhere('product_ref', 'like', "%{$query}%")
+    //         ->limit(10)
+    //         ->get(['id', 'product_name', 'product_ref', 'price']);
 
-        return response()->json($products);
-    }
+    //     return response()->json($products);
+    // }
 
 
     public function destroy(Product $product):RedirectResponse
     {
         $product->delete();
-        return redirect()->route('product.index')->with($type,$message);
+        return redirect()->route('product.index');
     }
 
     public function exportPdf(Request $request)
@@ -255,5 +257,5 @@ class ProductController extends Controller
         return $pdf->download('products.pdf');
     }
 
-  
+
 }

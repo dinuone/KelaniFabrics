@@ -210,40 +210,27 @@
                 <h3>{{ $label }}</h3>
                 <div class="stat-value">{{ $count }}</div>
                 <div class="stat-trend">
-                    <span>📊</span>
-
+                    @if($label == 'Categories')
+                        <span> <i class="fas fa-tags fa-lg me-3"></i></span>
+                    @elseif($label == 'Products')
+                         <span>    <i class="fas fa-box-open fa-lg me-3"></i> </span>
+                    @elseif($label == 'Orders')
+                         <span>  <i class="fas fa-shopping-cart fa-lg me-3"></i> </span>
+                    @elseif($label == 'Employees')
+                         <span>  <i class="fas fa-users fa-lg me-3"></i> </span>
+                    @elseif($label == 'Customers')
+                         <span>  <i class="fas fa-user-tie fa-lg me-3"></i></span>
+                    @elseif($label == 'Sub Categories')
+                         <span>  <i class="fas fa-tag fa-lg me-3"></i> </span>
+                    @elseif($label == 'Payments')
+                         <span>   <i class="fas fa-money-bill-wave fa-lg me-3"></i></span>
+                    @elseif($label == 'Stocks')
+                        <span>   <i class="fas fa-warehouse fa-lg me-3"></i> </span>
+                    @endif
                 </div>
             </div>
         @endforeach
-        {{-- @can('view reports')
-            <div class="stat-card">
-                <h3>Sale Report</h3>
-                <div class="stat-trend">
-                    <span>📊</span>
-                    <a href="{{ route('sales.report') }}" class="text-decoration-none text-dark">
-                    <span>View Sale Report</span>
-                    </a>
-                </div>
-            </div>
-             <div class="stat-card">
-                <h3>Customer Report</h3>
-                <div  class="stat-trend">
-                    <span>📊</span>
-                    <a href="{{ route('customer.report') }}" class="text-decoration-none text-dark">
-                    <span>View Customer Report</span>
-                    </a>
-                </div>
-            </div>
-             <div class="stat-card">
-                <h3>Delivery Report</h3>
-                <div class="stat-trend">
-                    <span>📊</span>
-                    <a href="{{ route('delivery.report') }}" class="text-decoration-none text-dark">
-                    <span>View Delivery Report</span>
-                    </a>
-                </div>
-            </div>
-            @endcan --}}
+
 
     </div>
 
@@ -267,7 +254,7 @@
                     <th>Status</th>
                     <th>Last Updated</th>
                     <th>Progress</th>
-                    <th>Action</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -280,7 +267,7 @@
                             <div class="progress-fill" style="width: {{ $categoriesCount > 0 ? '75%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>📝 Manage</td>
+
                 </tr>
                 <tr>
                     <td>Products</td>
@@ -291,7 +278,7 @@
                             <div class="progress-fill" style="width: {{ $productsCount > 0 ? '50%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>{{ $productsCount > 0 ? '📝 Manage' : '➕ Add Products' }}</td>
+
                 </tr>
                 <tr>
                     <td>Customers</td>
@@ -302,7 +289,7 @@
                             <div class="progress-fill" style="width: {{ $customersCount > 0 ? '40%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>{{ $customersCount > 0 ? '📝 Manage' : '👥 Add Customers' }}</td>
+
                 </tr>
                 <tr>
                     <td>Employees</td>
@@ -313,7 +300,7 @@
                             <div class="progress-fill" style="width: {{ $employeesCount > 0 ? '60%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>{{ $employeesCount > 0 ? '📝 Manage' : '👨‍💼 Add Staff' }}</td>
+
                 </tr>
                 <tr>
                     <td>Orders</td>
@@ -324,7 +311,7 @@
                             <div class="progress-fill" style="width: {{ $ordersCount > 0 ? '30%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>{{ $ordersCount > 0 ? '📝 Manage' : '🛒 Start Orders' }}</td>
+
                 </tr>
                 <tr>
                     <td>Stock Management</td>
@@ -335,7 +322,7 @@
                             <div class="progress-fill" style="width: {{ $stocksCount > 0 ? '25%' : '0%' }}"></div>
                         </div>
                     </td>
-                    <td>{{ $stocksCount > 0 ? '📝 Manage' : '📦 Setup Inventory' }}</td>
+
                 </tr>
             </tbody>
         </table>

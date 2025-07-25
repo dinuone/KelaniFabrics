@@ -8,12 +8,20 @@ class ecomorder extends Model
 {
     protected $table = 'ecomorders';
 
+
+
     protected $fillable = [
         'order_number',
+        'customer_email',
+        'customer_phone',
+        'customer_address',
+        'customer_city',
+        'customer_state',
+        'customer_name',
         'customer_id',
-        'total_amount',
         'payment_method',
         'status',
+        'total_amount',
     ];
 
     public function items(): HasMany

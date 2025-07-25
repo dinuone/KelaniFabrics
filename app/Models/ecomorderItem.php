@@ -8,13 +8,8 @@ class ecomorderItem extends Model
 {
     protected $table = 'ecomorder_items';
 
-    protected $fillable = [
-        'order_id',
-        'product_id',
-        'color_id',
-        'size_id',
-        'price',
-        'quantity',
+   protected $fillable = [
+        'order_id', 'product_id', 'color_id', 'size_id', 'quantity', 'price'
     ];
 
     public function order(): BelongsTo
