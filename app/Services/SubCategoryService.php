@@ -9,6 +9,8 @@ class SubCategoryService
 
         $query = SubCategory::with('category');
 
+
+
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('sub_cat_name', 'LIKE', "%{$search}%")
@@ -16,6 +18,7 @@ class SubCategoryService
 
             });
         }
+
 
         return $query->paginate(10);
         //return Sub_category::paginate(10);

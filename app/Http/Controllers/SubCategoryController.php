@@ -31,8 +31,11 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $search = request()->query('search'); // Get ?search= query
-        $sub_categories = $this->subcategoryService->getAll($search); // Make sure this returns data
+        // $search = request()->query('search'); // Get ?search= query
+        // $sub_categories = $this->subcategoryService->getAll($search); // Make sure this returns data
+        // dd($sub_categories);
+        $sub_categories = SubCategory::with('category')->paginate(10);
+
         return view('subcategory.index', compact('sub_categories'));
     }
 
@@ -52,7 +55,7 @@ class SubCategoryController extends Controller
      */
     public function store(StoreSub_categoryRequest $request)
     {
-       
+
         list($type,$message)=$this->subcategoryService->storeSubCategory(
             catId: $request['catName'],
             //catId:$request['catId'],
@@ -65,10 +68,7 @@ class SubCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sub_category $sub_category)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -126,5 +126,5 @@ class SubCategoryController extends Controller
     }
 
 
-   
+
 }

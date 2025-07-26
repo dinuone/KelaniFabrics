@@ -274,7 +274,7 @@
                                         <td>
                                             <span class="category-badge">
                                                 <i class="bi bi-tag-fill me-1"></i>
-                                                {{$sub_category->category->cat_name}}
+                                              {{ $sub_category->category->cat_name ?? 'N/A' }}
                                             </span>
                                         </td>
                                         <td>

@@ -25,9 +25,9 @@ class SubCategory extends Model
     /**
      * Get the category that owns the subcategory.
      */
-    public function category(): BelongsTo
+    public function category()
     {
-        return $this->belongsTo(Category::class, 'cat_id');
+       return $this->belongsTo(Category::class, 'cat_id')->withTrashed();
     }
 
 
